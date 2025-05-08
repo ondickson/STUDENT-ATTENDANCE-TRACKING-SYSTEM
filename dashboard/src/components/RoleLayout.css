@@ -1,0 +1,22 @@
+/* src/components/RoleLayout.css */
+
+.role-layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .sidebar {
+    width: 15%;
+    background-color: #086308;
+    color: white;
+    padding: 20px;
+  }
+  
+  .role-content {
+    width: 85%;
+    padding: 2rem;
+    background-color: #FEFEFE;
+    overflow-y: auto;
+  }
+  

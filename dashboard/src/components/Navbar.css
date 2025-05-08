@@ -1,0 +1,76 @@
+/* src/components/Navbar.css */
+
+/* Top navbar (you said it might not be needed, but keeping it clean) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #086308;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .navbar-left a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+  }
+  
+  .navbar-right button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .navbar-right button:hover {
+    background-color: white;
+    color: #086308;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #086308;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  .sidebar-header {
+    font-size: 24px;
+    font-family: 'Cal Sans', sans-serif;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+  }
+  
+  .sidebar ul li a:hover {
+    color: #FDFC09; /* Yellow only on hover */
+  }
+  
+  /* Main content */
+  .main-content {
+    margin-left: 250px;
+    padding: 20px;
+    background-color: #FEFEFE;
+    min-height: 100vh;
+  }
+  

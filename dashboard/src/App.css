@@ -1,0 +1,14 @@
+/* src/App.css */
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #FEFEFE;
+  color: #000;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

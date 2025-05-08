@@ -1,0 +1,31 @@
+.mark-attendance-page{
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.mark-attendance-header{
+  font-family: 'Cal Sans', sans-serif;
+  font-size: 2.5rem;
+  color: #086308; /* Green */
+  margin-bottom: 2rem;
+}
+
+.attendance-table {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .attendance-summary {
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+  }
+  
+  .table-cell {
+    font-size: 14px;
+  }
+  

@@ -1,0 +1,92 @@
+.class-schedule-page {
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .class-schedule-header {
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 2.5rem;
+    color: #086308; /* Green */
+    margin-bottom: 2rem;
+  }
+  
+  .course-select {
+    margin-bottom: 1.5rem;
+  }
+  
+  .schedule-table {
+    margin-top: 2rem;
+  }
+  
+  .schedule-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .schedule-table th, .schedule-table td {
+    padding: 1rem;
+    text-align: left;
+  }
+  
+  .schedule-table th {
+    background-color: #086308;
+    color: white;
+  }
+  
+  .schedule-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .schedule-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .add-schedule-button {
+    margin-top: 2rem;
+    background-color: #086308;
+    color: white;
+  }
+
+  /* Modal Styling */
+.modal-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.filter-input, .filter-select {
+  margin-right: 1rem;
+}
+
+.schedule-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.schedule-table th, .schedule-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.schedule-table tr {
+  text-align: center;
+}
+
+.add-schedule-button {
+  margin-top: 1rem;
+}
+
+  

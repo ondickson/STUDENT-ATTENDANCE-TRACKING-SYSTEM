@@ -1,0 +1,34 @@
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fefefe;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .register-container {
+    width: 400px;
+    padding: 30px;
+    border-radius: 12px;
+  }
+  
+  .register-title {
+    font-family: 'Cal Sans', sans-serif;
+  font-size: 2.5rem;
+  color: #086308; /* Green */
+  margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-field {
+    margin-bottom: 1.5rem; 
+  }
+  
+
+  

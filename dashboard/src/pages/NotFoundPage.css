@@ -1,0 +1,33 @@
+.not-found-page {
+    text-align: center;
+    padding: 50px;
+    background-color: #f4f4f4;
+    height: 100vh;
+  }
+  
+  .not-found-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f22028; /* Red color for the error */
+  }
+  
+  .not-found-message {
+    font-size: 1.2rem;
+    margin: 20px 0;
+  }
+  
+  .not-found-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    color: white;
+    background-color: #086308; /* Green color */
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .not-found-link:hover {
+    background-color: #064a06;
+  }
+  

@@ -1,0 +1,55 @@
+.resolve-dispute-page {
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .resolve-dispute-header {
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 2rem;
+    color: #086308;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dispute-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fefefe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .dispute-table th,
+  .dispute-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .dispute-table th {
+    background-color: #086308;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  button.MuiButton-containedSuccess {
+    background-color: #086308;
+  }
+  
+  button.MuiButton-containedSuccess:hover {
+    background-color: #064f06;
+  }
+  
+  button.MuiButton-containedError {
+    background-color: #f22028;
+  }
+  
+  button.MuiButton-containedError:hover {
+    background-color: #d71c1c;
+  }
+  

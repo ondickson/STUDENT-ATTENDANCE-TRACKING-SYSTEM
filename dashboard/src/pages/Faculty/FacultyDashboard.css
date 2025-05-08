@@ -1,0 +1,47 @@
+.faculty-dashboard {
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .faculty-dashboard-header {
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 2.5rem;
+    color: #086308; /* Green */
+    margin-bottom: 2rem;
+  }
+  
+  .faculty-stats-container {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .faculty-stat-card {
+    background-color: #FEFEFE;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .faculty-stat-card h2 {
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .faculty-stat-card p {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .faculty-stat-card.green {
+    background-color: #086308; /* Green */
+    color: #FEFEFE; /* White */
+  }
+  
+  .faculty-stat-card.red {
+    background-color: #f22028; /* Red */
+    color: #FEFEFE; /* White */
+  }
+  

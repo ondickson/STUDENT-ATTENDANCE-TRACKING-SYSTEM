@@ -1,0 +1,71 @@
+.user-management-page {
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .user-management-header {
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 2rem;
+    color: #086308;
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fefefe;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .user-table th {
+    background-color: #086308;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  button.MuiButton-containedSuccess {
+    background-color: #086308;
+  }
+  
+  button.MuiButton-containedSuccess:hover {
+    background-color: #064f06;
+  }
+  
+  button.MuiButton-containedError {
+    background-color: #f22028;
+  }
+  
+  button.MuiButton-containedError:hover {
+    background-color: #d71c1c;
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filter-input, .filter-select {
+    min-width: 200px;
+  }
+
+  .edit-modal-content .MuiTextField-root,
+.edit-modal-content .MuiFormControl-root {
+  margin-top: 12px;
+}
+
+  

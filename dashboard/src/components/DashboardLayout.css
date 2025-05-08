@@ -1,0 +1,12 @@
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 1.5rem;
+    background-color: #FEFEFE;
+    font-family: 'Inter', sans-serif;
+  }
+  
