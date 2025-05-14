@@ -1,29 +1,12 @@
-import React, { useState } from 'react';
 import { TextField, Button, Paper, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
+import { Link } from 'react-router-dom';
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    course: '',
-    year: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Register data:', formData);
-    // TODO: Send to backend using authService
     alert('Registration successful!');
-    navigate('/login');
   };
 
   return (
@@ -37,8 +20,6 @@ const RegisterPage = () => {
           <TextField
             label="Full Name"
             name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
             fullWidth
             required
             sx={{ mb: 2 }}
@@ -48,8 +29,6 @@ const RegisterPage = () => {
             label="Email"
             name="email"
             type="email"
-            value={formData.email}
-            onChange={handleChange}
             fullWidth
             required
             sx={{ mb: 2 }}
@@ -59,8 +38,6 @@ const RegisterPage = () => {
             label="Password"
             name="password"
             type="password"
-            value={formData.password}
-            onChange={handleChange}
             fullWidth
             required
             sx={{ mb: 2 }}
@@ -70,8 +47,6 @@ const RegisterPage = () => {
             select
             label="Course"
             name="course"
-            value={formData.course}
-            onChange={handleChange}
             fullWidth
             required
             sx={{ mb: 2 }}
@@ -92,8 +67,6 @@ const RegisterPage = () => {
             select
             label="Year Level"
             name="year"
-            value={formData.year}
-            onChange={handleChange}
             fullWidth
             required
             sx={{ mb: 2 }}
@@ -114,6 +87,13 @@ const RegisterPage = () => {
           </Button>
         </form>
       </Paper>
+
+      <p>
+        Already have an account?{' '}
+        <Link to="/" style={{ color: 'blue', textDecoration: 'underline' }}>
+          Login here
+        </Link>
+      </p>
     </div>
   );
 };

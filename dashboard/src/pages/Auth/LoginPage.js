@@ -1,30 +1,15 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
 import { TextField, Button, Container, Box } from '@mui/material';
 import './LoginPage.css';
+import { Link } from 'react-router-dom';
 
 function LoginPage() {
-  const { login } = useContext(AuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const userData = {
-      email,
-      role: 'admin',
-    };
-
-    login(userData);
-  };
 
   return (
     <div className="login-wrapper">
       {/* Logo at the top, outside container */}
-      <div className='login-logo-container'>
+      {/* <div className='login-logo-container'>
       <img src="/nvsulogo.jpeg" alt="NVSU Logo" className="login-logo" />
-      </div>
+      </div> */}
       
 
       <Container component="main" maxWidth="xs" className="login-container">
@@ -37,7 +22,7 @@ function LoginPage() {
             minHeight: '70vh',
           }}
         >
-          <form onSubmit={handleSubmit} className="login-form">
+          <form className="login-form">
             <h1 className="login-header">Login</h1>
             <TextField
               variant="outlined"
@@ -46,8 +31,6 @@ function LoginPage() {
               fullWidth
               label="Email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="login-input"
             />
             <TextField
@@ -57,8 +40,6 @@ function LoginPage() {
               fullWidth
               label="Password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="login-input"
             />
             <Button
@@ -74,6 +55,15 @@ function LoginPage() {
           </form>
         </Box>
       </Container>
+      <p>
+        Don't have an account?{' '}
+        <Link
+          to="/register"
+          style={{ color: 'blue', textDecoration: 'underline' }}
+        >
+          Register here
+        </Link>
+      </p>
     </div>
   );
 }
