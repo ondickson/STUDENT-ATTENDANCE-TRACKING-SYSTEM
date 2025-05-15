@@ -60,5 +60,16 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+// ✅ Add this in User.js to enable virtual population of attendance
+userSchema.virtual('attendance', {
+  ref: 'Attendance',
+  localField: '_id',
+  foreignField: 'userId',
+});
+
+// ✅ Required to include virtuals in output
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+
 const User = mongoose.model('User', userSchema);
 export default User;
