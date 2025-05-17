@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import RoleLayout from '../../components/RoleLayout';
 import './StudentDashboard.css';
-import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Card, CardContent, Typography, Grid } from '@mui/material';
 import axios from 'axios';
 
 const StudentDashboard = () => {
@@ -69,35 +68,6 @@ const StudentDashboard = () => {
             </Card>
           </Grid>
         </Grid>
-
-        <div className="dashboard-actions">
-          <Button
-            variant="contained"
-            component={Link}
-            to="/student/view-attendance"
-            style={{ backgroundColor: '#086308', color: '#fff' }}
-          >
-            View Attendance
-          </Button>
-
-          <Button
-            variant="contained"
-            component={Link}
-            to="/student/class-schedule"
-            style={{ backgroundColor: '#086308', color: '#fff' }}
-          >
-            Class Schedule
-          </Button>
-
-          <Button
-            variant="contained"
-            component={Link}
-            to="/student/raise-dispute"
-            style={{ backgroundColor: '#f22028', color: '#fff' }}
-          >
-            Raise Dispute
-          </Button>
-        </div>
       </div>
     </RoleLayout>
   );

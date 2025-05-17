@@ -5,10 +5,8 @@ import {
   Assignment,
   Group,
   ReportProblem,
-  Event,
   Visibility,
   ErrorOutline,
-  MenuBook,
   Logout,
 } from '@mui/icons-material';
 import './Sidebar.css';
@@ -53,11 +51,6 @@ const Sidebar = () => {
         icon: <Assignment fontSize="small" />,
       },
       {
-        label: 'Class Schedule',
-        path: '/faculty/class-schedule',
-        icon: <Event fontSize="small" />,
-      },
-      {
         label: 'Resolve Disputes',
         path: '/faculty/resolve-dispute',
         icon: <ReportProblem fontSize="small" />,
@@ -78,11 +71,6 @@ const Sidebar = () => {
         label: 'Raise Dispute',
         path: '/student/raise-dispute',
         icon: <ErrorOutline fontSize="small" />,
-      },
-      {
-        label: 'Class Schedule',
-        path: '/student/class-schedule',
-        icon: <MenuBook fontSize="small" />,
       },
     ],
   };
