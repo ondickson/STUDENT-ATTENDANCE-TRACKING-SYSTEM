@@ -52,39 +52,42 @@ const MarkAttendancePage = () => {
   }, []);
 
   useEffect(() => {
-  const fetchStudentsAndAttendance = async () => {
-    try {
-      const [usersRes, attendanceData] = await Promise.all([
-        fetch('http://localhost:5000/api/users'),
-        fetchAttendanceByDate(date),
-      ]);
-      const users = await usersRes.json();
+    const fetchStudentsAndAttendance = async () => {
+      try {
+        const [usersRes, attendanceData] = await Promise.all([
+          fetch('http://localhost:5000/api/users'),
+          fetchAttendanceByDate(date),
+        ]);
+        const users = await usersRes.json();
 
-      const attendanceMap = {};
-      attendanceData.forEach((record) => {
-        attendanceMap[record.userId] = record.status;
-      });
+        const attendanceMap = {};
+        attendanceData.forEach((record) => {
+          attendanceMap[record.userId] = record.status;
+        });
 
-      const filtered = users
-        .filter((user) => user.role === 'student')
-        .map((student) => ({
-          id: student._id,
-          name: student.fullName,
-          course: student.course,
-          year: student.year,
-          present: attendanceMap[student._id] === 'present' ? true :
-                   attendanceMap[student._id] === 'absent' ? false : null,
-        }));
+        const filtered = users
+          .filter((user) => user.role === 'student')
+          .map((student) => ({
+            id: student._id,
+            name: student.fullName,
+            course: student.course,
+            year: student.year,
+            present:
+              attendanceMap[student._id] === 'present'
+                ? true
+                : attendanceMap[student._id] === 'absent'
+                ? false
+                : null,
+          }));
 
-      setStudents(filtered);
-    } catch (err) {
-      console.error('Failed to fetch students or attendance:', err);
-    }
-  };
+        setStudents(filtered);
+      } catch (err) {
+        console.error('Failed to fetch students or attendance:', err);
+      }
+    };
 
-  fetchStudentsAndAttendance();
-}, [date]); // rerun when `date` changes
-
+    fetchStudentsAndAttendance();
+  }, [date]); // rerun when `date` changes
 
   const handleCourseChange = (event) => {
     setCourse(event.target.value);
@@ -102,32 +105,42 @@ const MarkAttendancePage = () => {
     );
   };
 
-  const handleSubmitAttendance = async () => {
-    try {
-      const attendanceData = students.map((student) => ({
+const handleSubmitAttendance = async () => {
+  try {
+    // Filter out students where attendance is not marked (present === null)
+    const attendanceData = students
+      .filter(student => student.present !== null)
+      .map(student => ({
         userId: student.id,
         date,
         status: student.present ? 'present' : 'absent',
       }));
 
-      const response = await fetch(
-        'http://localhost:5000/api/attendance/mark',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(attendanceData),
-        },
-      );
-
-      if (response.ok) {
-        alert('Attendance submitted successfully!');
-      } else {
-        alert('Failed to submit attendance.');
-      }
-    } catch (error) {
-      console.error('Submit error:', error);
+    // If no attendance marked at all, you might want to warn or just return
+    if (attendanceData.length === 0) {
+      alert('Please mark attendance for at least one student before submitting.');
+      return;
     }
-  };
+
+    const response = await fetch(
+      'http://localhost:5000/api/attendance/mark',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(attendanceData),
+      }
+    );
+
+    if (response.ok) {
+      alert('Attendance submitted successfully!');
+    } else {
+      alert('Failed to submit attendance.');
+    }
+  } catch (error) {
+    console.error('Submit error:', error);
+  }
+};
+
 
   const filteredStudents = course
     ? students.filter((student) => student.course === course)
@@ -138,15 +151,40 @@ const MarkAttendancePage = () => {
   ).length;
 
   const fetchAttendanceByDate = async (selectedDate) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/attendance/by-date?date=${selectedDate}`,
+      );
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch attendance:', error);
+      return [];
+    }
+  };
+
+  const handleClearAttendance = async (userId) => {
+  const student = students.find((s) => s.id === userId);
+  if (student?.present === null) return; // Do nothing if attendance wasn't marked
+
   try {
-    const res = await fetch(
-      `http://localhost:5000/api/attendance/by-date?date=${selectedDate}`,
-    );
-    const data = await res.json();
-    return data;
+    const res = await fetch(`http://localhost:5000/api/attendance`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, date }),
+    });
+
+    if (res.ok) {
+      setStudents((prev) =>
+        prev.map((student) =>
+          student.id === userId ? { ...student, present: null } : student,
+        ),
+      );
+    } else {
+      console.error('Failed to delete attendance');
+    }
   } catch (error) {
-    console.error('Failed to fetch attendance:', error);
-    return [];
+    console.error('Error deleting attendance:', error);
   }
 };
 
@@ -231,6 +269,18 @@ const MarkAttendancePage = () => {
                         }}
                       >
                         Absent
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        onClick={() => handleClearAttendance(student.id)}
+                        style={{
+                          marginLeft: '10px',
+                          backgroundColor: '#ccc',
+                          color: '#333',
+                        }}
+                      >
+                        Clear
                       </Button>
                     </TableCell>
                   </TableRow>

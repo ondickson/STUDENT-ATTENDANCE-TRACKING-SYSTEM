@@ -4,10 +4,6 @@ import './RaiseDisputePage.css';
 import {
   TextField,
   Button,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
   Paper,
   Typography,
   Table,
@@ -19,19 +15,20 @@ import {
 } from '@mui/material';
 
 const RaiseDisputePage = () => {
+  const userId = localStorage.getItem('userId');
+  const fullname = localStorage.getItem('fullName');
+  const course = localStorage.getItem('course');
+
   const [formData, setFormData] = useState({
-    fullname: '',
-    course: '',
     date: '',
     reason: '',
   });
 
   const [disputes, setDisputes] = useState([]);
-  const userId = localStorage.getItem('userId');
 
-  // Fetch disputes on mount
   useEffect(() => {
     const fetchDisputes = async () => {
+      if (!userId) return;
       try {
         const res = await fetch(`http://localhost:5000/api/disputes/user/${userId}`);
         const data = await res.json();
@@ -40,12 +37,11 @@ const RaiseDisputePage = () => {
         console.error('Failed to fetch disputes:', err);
       }
     };
-
     fetchDisputes();
   }, [userId]);
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -54,16 +50,36 @@ const RaiseDisputePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation before sending
+    if (!fullname || !course || !userId) {
+      alert('User information is missing. Please login again.');
+      return;
+    }
+    if (!formData.date || !formData.reason) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    const payload = {
+      fullname,
+      course,
+      userId,
+      date: formData.date,
+      reason: formData.reason,
+    };
+
+    console.log('Submitting dispute:', payload);
+
     try {
       const res = await fetch('http://localhost:5000/api/disputes/raise', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, userId }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
         alert('Dispute submitted successfully!');
-        setFormData({ fullname: '', course: '', date: '', reason: '' });
+        setFormData({ date: '', reason: '' });
 
         // Refresh disputes
         const updatedRes = await fetch(`http://localhost:5000/api/disputes/user/${userId}`);
@@ -72,8 +88,7 @@ const RaiseDisputePage = () => {
       } else {
         const errData = await res.json();
         alert(`Failed to submit: ${errData.message}`);
-        console.log('Submitting:', { ...formData, userId });
-        console.log('Response:', res);
+        console.error('Backend error response:', errData);
       }
     } catch (err) {
       console.error('Submission error:', err);
@@ -90,37 +105,6 @@ const RaiseDisputePage = () => {
           </Typography>
 
           <form onSubmit={handleSubmit} className="dispute-form">
-            <TextField
-              label="Full Name"
-              name="fullname"
-              fullWidth
-              className="form-field"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
-            />
-
-            <FormControl fullWidth className="form-field" required>
-              <InputLabel>Course</InputLabel>
-              <Select
-                value={formData.course}
-                onChange={handleChange}
-                name="course"
-                label="Course"
-              >
-                <MenuItem value="BSA">BSA</MenuItem>
-                <MenuItem value="BSMath">BSMath</MenuItem>
-                <MenuItem value="BSCS">BSCS</MenuItem>
-                <MenuItem value="BSIT">BSIT</MenuItem>
-                <MenuItem value="BSAgrib">BSAgrib</MenuItem>
-                <MenuItem value="BSBA">BSBA</MenuItem>
-                <MenuItem value="BSCE">BSCE</MenuItem>
-                <MenuItem value="BSHM">BSHM</MenuItem>
-                <MenuItem value="BSF">BSF</MenuItem>
-                <MenuItem value="BPEd">BPEd</MenuItem>
-              </Select>
-            </FormControl>
-
             <TextField
               label="Date of Attendance"
               type="date"
@@ -176,9 +160,9 @@ const RaiseDisputePage = () => {
                     <TableCell>{d.reason}</TableCell>
                     <TableCell>
                       <strong style={{
-                        color: d.status === 'Resolved' ? 'green'
-                          : d.status === 'Dismissed' ? 'red'
-                          : 'orange'
+                        color:
+                          d.status === 'Resolved' ? 'green' :
+                          d.status === 'Dismissed' ? 'red' : 'orange'
                       }}>
                         {d.status}
                       </strong>

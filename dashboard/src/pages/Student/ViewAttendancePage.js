@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RoleLayout from '../../components/RoleLayout';
 import './ViewAttendancePage.css';
 import {
@@ -9,52 +9,72 @@ import {
   TableHead,
   TableRow,
   Paper,
-//   Typography,
+  CircularProgress,
+  Typography,
 } from '@mui/material';
+import axios from 'axios';
 
 const ViewAttendancePage = () => {
-  const attendanceData = [
-    { date: '2025-05-01', subject: 'Web Development', status: 'Present' },
-    { date: '2025-05-02', subject: 'Data Structures', status: 'Absent' },
-    { date: '2025-05-03', subject: 'Database Systems', status: 'Present' },
-    { date: '2025-05-04', subject: 'Networking', status: 'Present' },
-    { date: '2025-05-05', subject: 'Operating Systems', status: 'Absent' },
-  ];
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/attendance/${user.id}`);
+        setAttendanceData(res.data);
+      } catch (err) {
+        console.error('❌ Error fetching attendance:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user?.id) fetchAttendance();
+  }, [user?.id]);
 
   return (
     <RoleLayout>
       <div className="view-attendance-page">
-        <h1 variant="h4" className="page-title">
-          Attendance Record
-        </h1>
+        <h1 className="page-title">Attendance Record</h1>
 
-        <TableContainer component={Paper} className="attendance-table-container">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className="header-cell">Date</TableCell>
-                <TableCell className="header-cell">Subject</TableCell>
-                <TableCell className="header-cell">Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {attendanceData.map((entry, index) => (
-                <TableRow key={index}>
-                  <TableCell>{entry.date}</TableCell>
-                  <TableCell>{entry.subject}</TableCell>
-                  <TableCell
-                    style={{
-                      color: entry.status === 'Present' ? '#086308' : '#f22028',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {entry.status}
-                  </TableCell>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <CircularProgress />
+          </div>
+        ) : attendanceData.length === 0 ? (
+          <Typography variant="body1" align="center" style={{ marginTop: '20px' }}>
+            No attendance records found.
+          </Typography>
+        ) : (
+          <TableContainer component={Paper} className="attendance-table-container">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="header-cell">Date</TableCell>
+                  <TableCell className="header-cell">Status</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {attendanceData.map((entry, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{new Date(entry.date).toLocaleDateString()}</TableCell>
+                    <TableCell
+                      style={{
+                        color: entry.status === 'present' ? '#086308' : '#f22028',
+                        fontWeight: 'bold',
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {entry.status}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </div>
     </RoleLayout>
   );
