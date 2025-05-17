@@ -53,3 +53,18 @@
     background-color: #d71c1c;
   }
   
+
+  /* Limit description width and truncate overflow */
+.MuiTableCell-description {
+  max-width: 200px; /* or your preferred max width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make actions cell buttons inline with some gap */
+.MuiTableCell-actions {
+  display: flex;
+  gap: 10px; /* space between buttons */
+  flex-wrap: nowrap; /* prevent stacking */
+}
