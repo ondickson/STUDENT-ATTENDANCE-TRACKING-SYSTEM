@@ -1,26 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RoleLayout from '../../components/RoleLayout';
 import './StudentDashboard.css';
 import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const StudentDashboard = () => {
-  // You could fetch this data from backend in real implementation
-  const studentName = 'Juan Dela Cruz';
-  const course = 'BSIT';
-  const attendanceStats = {
-    totalClasses: 50,
-    attended: 45,
-    absences: 5,
-  };
+  const [student, setStudent] = useState(null);
+  const [attendanceStats, setAttendanceStats] = useState(null);
 
-  const attendancePercentage = Math.round((attendanceStats.attended / attendanceStats.totalClasses) * 100);
+  useEffect(() => {
+    // Get student info from localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setStudent(storedUser);
+
+    // Fetch attendance stats if user exists
+    if (storedUser?.id) {
+      axios
+        .get(`http://localhost:5000/api/attendance/stats/${storedUser.id}`)
+        .then((res) => setAttendanceStats(res.data))
+        .catch((err) => {
+          console.error('⚠️ Error fetching attendance stats:', err);
+          setAttendanceStats({ totalClasses: 0, attended: 0, absences: 0 });
+        });
+    }
+  }, []);
+
+  const attendancePercentage = attendanceStats
+    ? Math.round((attendanceStats.attended / attendanceStats.totalClasses) * 100)
+    : 0;
 
   return (
     <RoleLayout>
       <div className="student-dashboard">
-        <h1 variant="h4" className="dashboard-title">
-          Welcome, {studentName}
+        <h1 className="dashboard-title">
+          Welcome, {student?.fullName || 'Student'}
         </h1>
 
         <Grid container spacing={3} className="dashboard-grid">
@@ -28,7 +42,7 @@ const StudentDashboard = () => {
             <Card className="dashboard-card" style={{ borderTop: '6px solid #086308' }}>
               <CardContent>
                 <Typography variant="h6">Course</Typography>
-                <Typography variant="body1">{course}</Typography>
+                <Typography variant="body1">{student?.course || '—'}</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -37,7 +51,9 @@ const StudentDashboard = () => {
             <Card className="dashboard-card" style={{ borderTop: '6px solid #086308' }}>
               <CardContent>
                 <Typography variant="h6">Attendance</Typography>
-                <Typography variant="body1">{attendanceStats.attended} / {attendanceStats.totalClasses} ({attendancePercentage}%)</Typography>
+                <Typography variant="body1">
+                  {attendanceStats ? `${attendanceStats.attended} / ${attendanceStats.totalClasses} (${attendancePercentage}%)` : 'Loading...'}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -46,7 +62,9 @@ const StudentDashboard = () => {
             <Card className="dashboard-card" style={{ borderTop: '6px solid #f22028' }}>
               <CardContent>
                 <Typography variant="h6">Absences</Typography>
-                <Typography variant="body1">{attendanceStats.absences}</Typography>
+                <Typography variant="body1">
+                  {attendanceStats ? attendanceStats.absences : 'Loading...'}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>

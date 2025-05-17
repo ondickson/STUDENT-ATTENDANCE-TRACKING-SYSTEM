@@ -8,6 +8,8 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
+import disputeRoutes from './routes/disputeRoutes.js';
+
 
 // Load env vars
 dotenv.config();
@@ -23,6 +25,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/disputes', disputeRoutes);
+
 
 
 

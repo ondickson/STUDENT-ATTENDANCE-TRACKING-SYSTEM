@@ -3,10 +3,6 @@
 import User from '../models/User.js';
 import Attendance from '../models/Attendance.js';
 
-/**
- * GET /api/attendance/report
- * Fetch all students and their attendance records
- */
 export const getAllAttendanceWithStudents = async (req, res) => {
   try {
     const students = await User.find({ role: 'student' }).populate({
@@ -23,11 +19,6 @@ export const getAllAttendanceWithStudents = async (req, res) => {
   }
 };
 
-/**
- * POST /api/attendance/mark
- * Mark attendance for multiple users for a specific date
- * Expects req.body = [{ userId, date, status }, ...]
- */
 export const markAttendance = async (req, res) => {
   try {
     const records = req.body;
@@ -55,3 +46,34 @@ export const markAttendance = async (req, res) => {
     res.status(500).json({ error: 'Failed to mark attendance' });
   }
 };
+
+export const getAttendanceByDate = async (req, res) => {
+  const { date } = req.query;
+  try {
+    const records = await Attendance.find({ date });
+    res.status(200).json(records);
+  } catch (err) {
+    console.error('Error fetching attendance:', err);
+    res.status(500).json({ message: 'Failed to fetch attendance' });
+  }
+};
+
+export const getAttendanceStats = async (req, res) => {
+  const { userId } = req.params;
+  console.log('Fetching attendance stats for userId:', userId);
+  try {
+    const attendanceRecords = await Attendance.find({ userId });
+    console.log('Attendance records found:', attendanceRecords.length);
+
+    const totalClasses = attendanceRecords.length;
+    const attended = attendanceRecords.filter(a => a.status === 'present').length;
+    const absences = attendanceRecords.filter(a => a.status === 'absent').length;
+
+    res.json({ totalClasses, attended, absences });
+  } catch (err) {
+    console.error('❌ Error fetching stats:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+

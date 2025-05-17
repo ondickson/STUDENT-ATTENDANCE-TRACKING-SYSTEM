@@ -10,40 +10,50 @@ function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setError('');
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        email,
-        password,
-      });
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/login', {
+      email,
+      password,
+    });
 
-      const { token, role } = response.data;
+    const { token, role, user } = response.data;
 
-      // Save to localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
+    // Save token and role
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', role);
 
-      console.log(`✅ Logged in as ${role}`);
+    // Save entire user object as JSON string for easy access
+    localStorage.setItem('user', JSON.stringify(user));
 
-      // Redirect based on role
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else if (role === 'faculty') {
-        navigate('/faculty/dashboard');
-      } else if (role === 'student') {
-        navigate('/student/dashboard');
-      } else {
-        setError('Unknown role. Contact admin.');
-      }
+    // Also save individual user properties separately for backward compatibility
+    localStorage.setItem('userId', user.id);
+    localStorage.setItem('fullName', user.fullName);
+    localStorage.setItem('email', user.email);
+    localStorage.setItem('course', user.course);
+    localStorage.setItem('year', user.year);
 
-    } catch (err) {
-      console.error('❌ Login error:', err);
-      setError(err.response?.data?.message || 'Login failed. Try again.');
+    console.log(`✅ Logged in as ${role}`);
+
+    // Redirect based on role
+    if (role === 'admin') {
+      navigate('/admin/dashboard');
+    } else if (role === 'faculty') {
+      navigate('/faculty/dashboard');
+    } else if (role === 'student') {
+      navigate('/student/dashboard');
+    } else {
+      setError('Unknown role. Contact admin.');
     }
-  };
+  } catch (err) {
+    console.error('❌ Login error:', err);
+    setError(err.response?.data?.message || 'Login failed. Try again.');
+  }
+};
+
 
   return (
     <div className="login-wrapper">
@@ -59,8 +69,6 @@ function LoginPage() {
         >
           <form className="login-form" onSubmit={handleLogin}>
             <h1 className="login-header">Login</h1>
-
-            
 
             <TextField
               variant="outlined"
@@ -101,7 +109,10 @@ function LoginPage() {
 
       <p>
         Don't have an account?{' '}
-        <Link to="/register" style={{ color: 'blue', textDecoration: 'underline' }}>
+        <Link
+          to="/register"
+          style={{ color: 'blue', textDecoration: 'underline' }}
+        >
           Register here
         </Link>
       </p>

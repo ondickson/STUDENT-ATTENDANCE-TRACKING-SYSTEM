@@ -63,9 +63,18 @@ export const loginUser = async (req, res) => {
     );
 
     console.log(`✅ Login successful for ${email} as ${user.role}`);
+
+    // ✅ Return full user info
     res.status(200).json({
       token,
       role: user.role,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        course: user.course,
+        year: user.year,
+      },
     });
 
   } catch (error) {
@@ -73,3 +82,4 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Server error during login' });
   }
 };
+

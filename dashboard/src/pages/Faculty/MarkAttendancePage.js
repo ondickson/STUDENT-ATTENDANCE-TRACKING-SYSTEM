@@ -51,6 +51,41 @@ const MarkAttendancePage = () => {
     fetchStudents();
   }, []);
 
+  useEffect(() => {
+  const fetchStudentsAndAttendance = async () => {
+    try {
+      const [usersRes, attendanceData] = await Promise.all([
+        fetch('http://localhost:5000/api/users'),
+        fetchAttendanceByDate(date),
+      ]);
+      const users = await usersRes.json();
+
+      const attendanceMap = {};
+      attendanceData.forEach((record) => {
+        attendanceMap[record.userId] = record.status;
+      });
+
+      const filtered = users
+        .filter((user) => user.role === 'student')
+        .map((student) => ({
+          id: student._id,
+          name: student.fullName,
+          course: student.course,
+          year: student.year,
+          present: attendanceMap[student._id] === 'present' ? true :
+                   attendanceMap[student._id] === 'absent' ? false : null,
+        }));
+
+      setStudents(filtered);
+    } catch (err) {
+      console.error('Failed to fetch students or attendance:', err);
+    }
+  };
+
+  fetchStudentsAndAttendance();
+}, [date]); // rerun when `date` changes
+
+
   const handleCourseChange = (event) => {
     setCourse(event.target.value);
   };
@@ -101,6 +136,20 @@ const MarkAttendancePage = () => {
   const presentCount = filteredStudents.filter(
     (student) => student.present,
   ).length;
+
+  const fetchAttendanceByDate = async (selectedDate) => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/attendance/by-date?date=${selectedDate}`,
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch attendance:', error);
+    return [];
+  }
+};
+
 
   return (
     <RoleLayout>
