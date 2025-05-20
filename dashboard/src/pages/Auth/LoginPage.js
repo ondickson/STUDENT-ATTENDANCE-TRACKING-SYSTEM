@@ -14,6 +14,14 @@ const handleLogin = async (e) => {
   e.preventDefault();
   setError('');
 
+  const existingRole = localStorage.getItem('role');
+
+  // Prevent login if another role is already logged in
+  if (existingRole && existingRole !== 'null') {
+    setError(`This device is already logged in as ${existingRole}. Please log out first.`);
+    return;
+  }
+
   try {
     const response = await axios.post('http://localhost:5000/api/auth/login', {
       email,
@@ -26,10 +34,10 @@ const handleLogin = async (e) => {
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
 
-    // Save entire user object as JSON string for easy access
+    // Save entire user object
     localStorage.setItem('user', JSON.stringify(user));
 
-    // Also save individual user properties separately for backward compatibility
+    // Save individual user fields
     localStorage.setItem('userId', user.id);
     localStorage.setItem('fullName', user.fullName);
     localStorage.setItem('email', user.email);
@@ -53,6 +61,7 @@ const handleLogin = async (e) => {
     setError(err.response?.data?.message || 'Login failed. Try again.');
   }
 };
+
 
 
   return (

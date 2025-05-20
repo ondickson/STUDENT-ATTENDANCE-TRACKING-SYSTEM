@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Dashboard,
@@ -8,13 +8,19 @@ import {
   Visibility,
   ErrorOutline,
   Logout,
+  Menu,
+  Close,
 } from '@mui/icons-material';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const role = location.pathname.split('/')[1];
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const closeSidebar = () => setIsOpen(false);
 
   const linksByRole = {
     admin: [
@@ -72,43 +78,56 @@ const Sidebar = () => {
         path: '/student/raise-dispute',
         icon: <ErrorOutline fontSize="small" />,
       },
+      {
+        label: 'Scan QR Code',
+        path: '/student/scanqrcode',
+        icon: <ErrorOutline fontSize="small" />,
+      },
     ],
   };
 
   const links = linksByRole[role] || [];
 
   const handleLogout = () => {
-    navigate('/');
-  };
+  localStorage.clear(); 
+  navigate('/');
+};
+
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <img src="/nvsulogo.jpeg" alt="NVSU Logo" className="sidebar-logo" />
-        <div className="sidebar-role">{role.toUpperCase()}</div>
-      </div>
+    <>
+      <button className="hamburger" onClick={toggleSidebar}>
+        {isOpen ? <Close /> : <Menu />}
+      </button>
 
-      <ul className="sidebar-links">
-        {links.map((link) => {
-          const isActive = location.pathname === link.path;
-          return (
-            <li key={link.path}>
-              <Link to={link.path} className={isActive ? 'active' : ''}>
-                <span className="icon">{link.icon}</span>
-                {link.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <img src="/nvsulogo.jpeg" alt="NVSU Logo" className="sidebar-logo" />
+          <div className="sidebar-role">{role.toUpperCase()}</div>
+        </div>
 
-      <div className="sidebar-footer">
-        <button className="logout-button" onClick={handleLogout}>
-          <Logout fontSize="small" className="icon" />
-          Logout
-        </button>
+        <ul className="sidebar-links" onClick={closeSidebar}>
+          {links.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <li key={link.path}>
+                <Link to={link.path} className={isActive ? 'active' : ''}>
+                  <span className="icon">{link.icon}</span>
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="sidebar-footer">
+          <button className="logout-button" onClick={handleLogout}>
+            <Logout fontSize="small" className="icon" />
+            Logout
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

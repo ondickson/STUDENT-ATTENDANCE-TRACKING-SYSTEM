@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { getAllAttendanceWithStudents, markAttendance, getAttendanceByDate, getAttendanceStats, getAttendanceByUser, deleteAttendanceEntry } from '../controllers/attendanceController.js';
+import { getAllAttendanceWithStudents, markAttendance, getAttendanceByDate, getAttendanceStats, getAttendanceByUser, deleteAttendanceEntry, markAttendanceViaQR } from '../controllers/attendanceController.js';
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.get('/by-date', getAttendanceByDate);
 router.get('/stats/:userId', getAttendanceStats);
 router.get('/:userId', getAttendanceByUser);
 router.delete('/', deleteAttendanceEntry);
+router.post('/mark-via-qr', markAttendanceViaQR);
 
 
 export default router;

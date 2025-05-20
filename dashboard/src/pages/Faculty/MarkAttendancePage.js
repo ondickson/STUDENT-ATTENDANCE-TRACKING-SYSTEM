@@ -23,8 +23,9 @@ const MarkAttendancePage = () => {
   const [course, setCourse] = useState('');
   const [date, setDate] = useState(
     () => new Date().toISOString().split('T')[0],
-  ); // Default to today
+  );
   const [students, setStudents] = useState([]);
+  const [nameFilter, setNameFilter] = useState('');
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -105,46 +106,55 @@ const MarkAttendancePage = () => {
     );
   };
 
-const handleSubmitAttendance = async () => {
-  try {
-    // Filter out students where attendance is not marked (present === null)
-    const attendanceData = students
-      .filter(student => student.present !== null)
-      .map(student => ({
-        userId: student.id,
-        date,
-        status: student.present ? 'present' : 'absent',
-      }));
+  const handleSubmitAttendance = async () => {
+    try {
+      // Filter out students where attendance is not marked (present === null)
+      const attendanceData = students
+        .filter((student) => student.present !== null)
+        .map((student) => ({
+          userId: student.id,
+          date,
+          status: student.present ? 'present' : 'absent',
+        }));
 
-    // If no attendance marked at all, you might want to warn or just return
-    if (attendanceData.length === 0) {
-      alert('Please mark attendance for at least one student before submitting.');
-      return;
-    }
-
-    const response = await fetch(
-      'http://localhost:5000/api/attendance/mark',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(attendanceData),
+      // If no attendance marked at all, you might want to warn or just return
+      if (attendanceData.length === 0) {
+        alert(
+          'Please mark attendance for at least one student before submitting.',
+        );
+        return;
       }
-    );
 
-    if (response.ok) {
-      alert('Attendance submitted successfully!');
-    } else {
-      alert('Failed to submit attendance.');
+      const response = await fetch(
+        'http://localhost:5000/api/attendance/mark',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(attendanceData),
+        },
+      );
+
+      if (response.ok) {
+        alert('Attendance submitted successfully!');
+      } else {
+        alert('Failed to submit attendance.');
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
     }
-  } catch (error) {
-    console.error('Submit error:', error);
-  }
-};
+  };
 
+  // const filteredStudents = course
+  //   ? students.filter((student) => student.course === course)
+  //   : students;
 
-  const filteredStudents = course
-    ? students.filter((student) => student.course === course)
-    : students;
+  const filteredStudents = students.filter((student) => {
+    const matchesCourse = course ? student.course === course : true;
+    const matchesName = student.name
+      .toLowerCase()
+      .includes(nameFilter.toLowerCase());
+    return matchesCourse && matchesName;
+  });
 
   const presentCount = filteredStudents.filter(
     (student) => student.present,
@@ -164,30 +174,29 @@ const handleSubmitAttendance = async () => {
   };
 
   const handleClearAttendance = async (userId) => {
-  const student = students.find((s) => s.id === userId);
-  if (student?.present === null) return; // Do nothing if attendance wasn't marked
+    const student = students.find((s) => s.id === userId);
+    if (student?.present === null) return; // Do nothing if attendance wasn't marked
 
-  try {
-    const res = await fetch(`http://localhost:5000/api/attendance`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, date }),
-    });
+    try {
+      const res = await fetch(`http://localhost:5000/api/attendance`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, date }),
+      });
 
-    if (res.ok) {
-      setStudents((prev) =>
-        prev.map((student) =>
-          student.id === userId ? { ...student, present: null } : student,
-        ),
-      );
-    } else {
-      console.error('Failed to delete attendance');
+      if (res.ok) {
+        setStudents((prev) =>
+          prev.map((student) =>
+            student.id === userId ? { ...student, present: null } : student,
+          ),
+        );
+      } else {
+        console.error('Failed to delete attendance');
+      }
+    } catch (error) {
+      console.error('Error deleting attendance:', error);
     }
-  } catch (error) {
-    console.error('Error deleting attendance:', error);
-  }
-};
-
+  };
 
   return (
     <RoleLayout>
@@ -196,6 +205,14 @@ const handleSubmitAttendance = async () => {
 
         {/* Inside your return statement: */}
         <Box sx={{ display: 'flex', gap: 2, marginBottom: 2 }}>
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            fullWidth
+            value={nameFilter}
+            onChange={(e) => setNameFilter(e.target.value)}
+          />
+
           <TextField
             label="Date"
             type="date"

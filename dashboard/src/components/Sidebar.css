@@ -4,13 +4,23 @@
   color: white;
   padding: 1rem;
   font-family: 'Inter', sans-serif;
-  /* height: 100vh; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: space-between; */
   position: sticky;
   top: 0;
 } 
+
+/* .sidebar {
+  width: 220px;
+  background-color: #086308;
+  color: white;
+  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+} */
 
 .sidebar-header {
   text-align: center;
@@ -87,4 +97,48 @@
 .sidebar-links a.active {
   color: #FDFC09;
   font-weight: 600;
+}
+
+
+/* New: Hamburger Button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: #086308;
+  font-size: 2rem;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+}
+
+
+
+/* Hide sidebar on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+.sidebar {
+  width: 220px !important;
+  background-color: #086308;
+  color: white;
+  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: transform 0.3s ease, width 0.3s ease;
+  z-index: 1000;
+}
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .hamburger {
+    display: block;
+  }
 }

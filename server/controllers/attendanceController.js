@@ -118,5 +118,34 @@ export const deleteAttendanceEntry = async (req, res) => {
   }
 };
 
+export const markAttendanceViaQR = async (req, res) => {
+  const { userId, sessionId } = req.body;
+
+  if (!userId || !sessionId) {
+    return res.status(400).json({ message: "userId and sessionId are required." });
+  }
+
+  const date = new Date().toISOString().split("T")[0];
+
+  try {
+    const existing = await Attendance.findOne({ userId, date });
+    if (existing) {
+      return res.status(400).json({ message: "Attendance already marked for today." });
+    }
+
+    const newRecord = await Attendance.create({
+      userId,
+      session: sessionId,
+      date,
+      status: "present",
+    });
+
+    console.log(`✅ QR attendance marked for user ${userId}, session ${sessionId}`);
+    res.status(201).json(newRecord);
+  } catch (error) {
+    console.error("❌ Error marking QR attendance:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
