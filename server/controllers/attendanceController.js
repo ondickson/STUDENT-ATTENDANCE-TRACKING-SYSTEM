@@ -60,10 +60,10 @@ export const getAttendanceByDate = async (req, res) => {
 
 export const getAttendanceStats = async (req, res) => {
   const { userId } = req.params;
-  console.log('Fetching attendance stats for userId:', userId);
+  // console.log('Fetching attendance stats for userId:', userId);
   try {
     const attendanceRecords = await Attendance.find({ userId });
-    console.log('Attendance records found:', attendanceRecords.length);
+    // console.log('Attendance records found:', attendanceRecords.length);
 
     const totalClasses = attendanceRecords.length;
     const attended = attendanceRecords.filter(a => a.status === 'present').length;

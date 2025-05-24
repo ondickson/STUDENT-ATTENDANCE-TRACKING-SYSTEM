@@ -1,50 +1,66 @@
 import React from 'react';
-import QrScanner from '../../components/QrScanner';
+import { jwtDecode } from 'jwt-decode';
 import RoleLayout from '../../components/RoleLayout';
 import './ScanQRCodePage.css';
+import axios from 'axios';
+
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import QrScanner from '../../components/QrScanner';
+
+
+
 
 const ScanQRCodePage = () => {
-const handleScanSuccess = async (data) => {
-  try {
+
+  const { user } = useContext(AuthContext);
+
+  const handleScanSuccess = async (data) => {
     console.log('Scanned QR Code:', data);
+    let sessionId;
 
-    // ✅ Parse JSON string, not URL
-    const { sessionId } = JSON.parse(data);
-
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user || user.role !== 'student') {
-      alert('Only students can mark attendance.');
+    try {
+      const parsedData = JSON.parse(data);
+      sessionId = parsedData.sessionId;
+      if (!sessionId) throw new Error('Invalid QR Code');
+    } catch (err) {
+      alert('Invalid QR code format.');
       return;
     }
 
+    // Fallback: Try extracting userId
+    let userId = user?.id;
+    if (!userId) {
+      try {
+        const token = localStorage.getItem('token');
+        const decoded = jwtDecode(token);
+
+        userId = decoded.id;
+      } catch {
+        alert('Unable to determine user identity.');
+        return;
+      }
+    }
+
     const attendanceRecord = {
-      userId: user._id,
+      userId,
       sessionId,
-      status: 'present',
       date: new Date().toISOString().split('T')[0],
+      status: 'present',
     };
 
-    const response = await fetch('http://localhost:5000/api/attendance/mark-qr', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([attendanceRecord]),
-    });
-
-    if (response.ok) {
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/attendance/mark-via-qr',
+        attendanceRecord,
+      );
+      console.log('✅ Attendance submitted:', response.data);
       alert('Attendance marked successfully!');
-    } else {
-      const errorData = await response.json();
-      console.error('Server error:', errorData);
-      alert('Failed to mark attendance.');
+    } catch (error) {
+      console.error('❌ Server error:', error.response?.data || error.message);
+      alert(error.response?.data?.message || 'Server error.');
     }
-  } catch (err) {
-    console.error('QR Scan error:', err);
-    alert('Invalid QR code or network error.');
-  }
-};
-
+  };
 
   return (
     <RoleLayout>

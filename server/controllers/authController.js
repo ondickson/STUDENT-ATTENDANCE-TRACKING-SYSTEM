@@ -4,7 +4,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res) => {
-  console.log('🔵 Incoming registration request:', req.body);
+  // console.log('🔵 Incoming registration request:', req.body);
 
   try {
     const { fullName, email, password, course, year } = req.body;
@@ -25,7 +25,7 @@ export const registerUser = async (req, res) => {
       year,
     });
 
-    console.log('New Student info: ', { fullName, email, password, course, year });
+    // console.log('New Student info: ', { fullName, email, password, course, year });
 
     await newUser.save();
     // console.log('✅ New user registered:', newUser.email);
@@ -40,8 +40,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('📩 Email from frontend:', email);
-    console.log('🔑 Password from frontend:', password);
 
     // Check if user exists
     const user = await User.findOne({ email });
@@ -50,11 +48,11 @@ export const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'Invalid email or password' });
     }
 
-    console.log('🔐 Hashed password from DB:', user.password);
+    // console.log('🔐 Hashed password from DB:', user.password);
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('🧪 Do they match?', isMatch);
+    // console.log('🧪 Do they match?', isMatch);
     if (!isMatch) {
       console.log('❌ Incorrect password');
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -67,7 +65,7 @@ export const loginUser = async (req, res) => {
       { expiresIn: '1d' },
     );
 
-    console.log(`✅ Login successful for ${email} as ${user.role}`);
+    // console.log(`✅ Login successful for ${email} as ${user.role}`);
 
     // ✅ Return full user info
     res.status(200).json({

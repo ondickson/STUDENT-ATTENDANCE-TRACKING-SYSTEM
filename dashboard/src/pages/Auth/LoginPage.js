@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Button, Container, Box } from '@mui/material';
 import './LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +9,20 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // ⛔ Redirect if already logged in
+  useEffect(() => {
+    const role = localStorage.getItem('role');
+
+    if (role === 'admin') {
+      navigate('/admin/dashboard');
+    } else if (role === 'faculty') {
+      navigate('/faculty/dashboard');
+    } else if (role === 'student') {
+      navigate('/student/dashboard');
+    }
+  }, [navigate]);
+
 
 const handleLogin = async (e) => {
   e.preventDefault();
